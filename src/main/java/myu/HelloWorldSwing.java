@@ -3,13 +3,9 @@ package myu;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import javafx.scene.input.KeyEvent;
-
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Arrays;
 
 public class HelloWorldSwing extends JPanel implements ActionListener {
@@ -45,17 +41,14 @@ public class HelloWorldSwing extends JPanel implements ActionListener {
         // JComponent panel1 = makeTextPanel("Panel #1");
         tabbedPane.addTab("Add Schedules", null, cards,
                 "Add Schedules");
-        // tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
          
         // JComponent panel2 = makeTextPanel("Panel #2");
         tabbedPane.addTab("Show Schedules", null, panel2,
                 "Show Schedules");
-        // tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
          
         JComponent panel3 = makeTextPanel("Panel #3");
         tabbedPane.addTab("Tab 3", null, panel3,
                 "Still does nothing");
-        // tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
          
          
         //Add the tabbed pane to this panel.
@@ -114,10 +107,6 @@ public class HelloWorldSwing extends JPanel implements ActionListener {
         frame.setVisible(true);
     }
 
-    private static void scheduleDisplayChanged() {
-       
-    }
-
     private static void addPDF() {
         
         JFileChooser fileChooser = new JFileChooser();
@@ -161,8 +150,8 @@ public class HelloWorldSwing extends JPanel implements ActionListener {
         }
     }
 
-    public void actionPerformed(ActionEvent e) {
-        
+    //just to satisfy the inherited abstract method
+    public void actionPerformed(ActionEvent e) {   
     }
 
     public static void main(String[] args) {

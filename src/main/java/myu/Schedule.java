@@ -10,7 +10,7 @@ public class Schedule {
     private Color color;
 
     public static void main(String[] args) {
-        Schedule test = new Schedule("test", 
+        new Schedule("test", 
             Arrays.asList("17913 M E 123 AB LB 0.0 VISUALIZATION & CAD TTh  930-1020 MEB 231 Jones,J"));
     }
 

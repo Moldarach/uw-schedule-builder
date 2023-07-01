@@ -6,11 +6,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Random;
 
 public class Grid {
     private List<Schedule> allSchedules = new ArrayList<>();
+    //default half hour blocks is 16
+    public static final int HALFHOURBLOCKS = 16;
 
     public static void main(String[] args) {
         new Grid(null);
@@ -37,9 +38,6 @@ public class Grid {
         });
     }
 
-
-    public static final int HALFHOURBLOCKS = 16;
-
     public class TestPane extends JPanel {
 
         public TestPane() {
@@ -47,7 +45,7 @@ public class Grid {
 
         @Override
         public Dimension getPreferredSize() {
-            return new Dimension(400, 400);
+            return new Dimension(500, 500);
         }
 
         protected void paintComponent(Graphics g) {
@@ -58,20 +56,18 @@ public class Grid {
             int width = getWidth() - (size * 2);
             int height = getHeight() - (size * 2);
 
-            //draw boxes
-            // int y = (getHeight() - (size * 8)) / 2;
+            //draw schedule grid
             int y = size;
             for (int horz = 0; horz < HALFHOURBLOCKS; horz++) {
-                // int x = (getWidth() - (size * 6)) / 2;
                 int x = xSize;
-                for (int vert = 0; vert < (HALFHOURBLOCKS/2-2); vert++) {
+                for (int vert = 0; vert < 6; vert++) {
                     g.drawRect(x, y, xSize, size);
                     x += xSize;
                 }
                 y += size;
             }
              
-            //write days
+            //write days to x-coordinate on canvas to a hashmap
             Map<String, Integer> daysToXCoord = new HashMap<>();
             String[] week = new String[]{"", "Monday", "Tuesday", 
                     "Wednesday", "Thursday", "Friday"};
@@ -79,7 +75,7 @@ public class Grid {
             int x = xSize;
             for (int i = 0; i < 6; i ++) {
                 g.drawString(week[i], x+(xSize/3), size-5);
-
+                //no zero case because need to draw nothing in that box 
                 switch(i) {
                     case 1:
                         dayKey = "M";
@@ -97,21 +93,20 @@ public class Grid {
                         dayKey = "F";
                         break;
                 }
-                // System.out.println(dayKey + ", " + x);
                 daysToXCoord.put(dayKey, x);
                 x += xSize;
             } 
 
-            //write times
+            //write times to canvas y-coordinates in a hashmap
             int time = 830;
             Map<Integer, Integer> timeToYCoord = new HashMap<>();
             for (int i = 1; i <= HALFHOURBLOCKS; i ++) {
                 g.drawString(Integer.toString(time), xSize+5, i*size+(size/2));
-                // System.out.println(time + ", " + i*size);
                 timeToYCoord.put(time, i*size);
+                //roll over to 1pm instead of 1300
                 if (time == 1230) {
                     time = 100;
-                } else if (time % 100 == 30) {
+                } else if (time % 100 == 30) { //go from half hour to on the hour mark
                     time += 70;
                 } else {
                     time += 30;
@@ -126,13 +121,15 @@ public class Grid {
                 //will possibly fail if one course is not consistent between days
                 for (Course course : sch.getCourses()) {
                     String days = course.getDays();
-                    String description = course.getName() + "\n" + course.getLocation();
                     int start = Integer.parseInt(course.getStart());
                     int end = Integer.parseInt(course.getEnd());
-                    g.setColor(getRandomColor());
+                    Color classColor = getRandomColor();
+                    
                     //handle each day that a class runs on
                     for (int i = 0; i < days.length(); i ++) {
+                        g.setColor(classColor);
                         String curr = days.substring(i, i+1);
+                        //handle Thursday separately because it is 2 characters long
                         if (curr.equals("T") && i < days.length()-1 && days.charAt(i+1) == 'h') {
                             curr = "Th";
                             i++;
@@ -141,18 +138,26 @@ public class Grid {
                         if (end < start) {
                             end += 1200;
                         }
-                        int rectHeight = (end-start)/30*size + (end-start)%30/30;
-                        // g.setColor(sch.getColor());
+                        //because for example, 920-830 gets 90 and not the actual 50 minutes 
+                        int timeDiff = end-start-(end-start)/90*40;
+                        int rectHeight = (timeDiff)/30*(size) + (int)((double)(timeDiff)%30.0/30.0*size);
                         
+                        //draw in rectangle for each class
                         g.fillRect(daysToXCoord.get(curr), 
                             timeToYCoord.get(start), xSize, rectHeight);
+
+                        //set color to black to write the text for each class
+                        g.setColor(Color.black);
+                        //write class name and location separately 
+                        g.drawString(course.getName(), daysToXCoord.get(curr) + xSize/3,
+                            timeToYCoord.get(start) + rectHeight/3);
+                        g.drawString(course.getLocation(), daysToXCoord.get(curr) + xSize/3,
+                             timeToYCoord.get(start) + rectHeight*2/3);
                     }
                 }
             }
-
             g2d.dispose();
         }
-
     }
 
     private Color getRandomColor() {
