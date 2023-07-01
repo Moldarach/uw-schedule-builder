@@ -1,0 +1,5 @@
+{
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "maven.terminal.useJavaHome": true,
+    "java.format.settings.url": "eclipse-formatter.xml"
+}
