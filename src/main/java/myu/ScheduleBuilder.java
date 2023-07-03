@@ -19,7 +19,6 @@ public class ScheduleBuilder {
         } catch(Exception e) {
             System.out.println("Schedule build failure");
         }
-        
     }
 
     protected static List<String> parse(File file) throws IOException {
@@ -28,17 +27,10 @@ public class ScheduleBuilder {
         String absolutePath = currentDir.getAbsolutePath();
         System.out.println("Current Absolute Filepath: " + absolutePath); */
 
-        // final String FILENAME="testpdf6.pdf";
-        
-        // PDDocument pd = PDDocument.load(new File(FILENAME));
-        
         PDDocument pd = PDDocument.load(file);
         PDFTextStripper reader = new PDFTextStripper();
         reader.setSortByPosition(true);
         String text = reader.getText(pd);
-        
-        
-        // System.out.println("\n" + text.length());
     
         int start = text.indexOf("Information", 0) + "Information".length();
         int end = text.indexOf("Display Textbooks");
@@ -62,7 +54,7 @@ public class ScheduleBuilder {
             } else {
                 String line = current;
                 //some classes have a line break in their name
-                //this length of <= 50 tries to guess for that 
+                    //this length of <= 50 tries to guess for that 
                 if (current.length() <= 50) {
                     line += " " + input.nextLine();
                 }
@@ -73,11 +65,10 @@ public class ScheduleBuilder {
                             line.substring(i+2);
                 }
                 allCourses.add(line);
-                System.out.println(line);
-                System.out.println(reverse(line) + "\n");
+                // System.out.println(line);
+                // System.out.println(reverse(line) + "\n");
             }
         }
-        // System.out.println(text);
         input.close();
         return allCourses;
     }
@@ -89,7 +80,6 @@ public class ScheduleBuilder {
             str = str.substring(0, str.lastIndexOf(" "));
         }
         reverse += " " + str;
-        // System.out.println("reverse: " + reverse); 
         return reverse.trim();
     }
 

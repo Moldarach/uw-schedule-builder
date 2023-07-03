@@ -7,8 +7,12 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
 
 public class HelloWorldSwing extends JPanel implements ActionListener {
+    private Grid visualGrid;
+
     public HelloWorldSwing() {
         super(new GridLayout(1, 1));
          
@@ -107,7 +111,7 @@ public class HelloWorldSwing extends JPanel implements ActionListener {
         frame.setVisible(true);
     }
 
-    private static void addPDF() {
+    private void addPDF() {
         
         JFileChooser fileChooser = new JFileChooser();
 
@@ -139,7 +143,14 @@ public class HelloWorldSwing extends JPanel implements ActionListener {
             } else {
                 try {
                     Schedule testSch = new Schedule(name, ScheduleBuilder.parse(selectedFile));
-                    new Grid(Arrays.asList(testSch));
+                    if (visualGrid == null) {
+                        List<Schedule> temp = new ArrayList<>();
+                        temp.add(testSch);
+                        visualGrid = new Grid(temp);
+                    } else {
+                        visualGrid.addSchedule(testSch);
+                    }
+                    
 
                 } catch(Exception e) {
                     e.printStackTrace();

@@ -116,18 +116,17 @@ public class Grid {
             //draw classes
             //parse each individual schedule 
             for (Schedule sch : allSchedules) {
-                sch.setColor(getRandomColor());
                 //parse all the courses in current schedule
                 //will possibly fail if one course is not consistent between days
                 for (Course course : sch.getCourses()) {
                     String days = course.getDays();
                     int start = Integer.parseInt(course.getStart());
                     int end = Integer.parseInt(course.getEnd());
-                    Color classColor = getRandomColor();
+                    // Color classColor = getRandomColor();
                     
                     //handle each day that a class runs on
                     for (int i = 0; i < days.length(); i ++) {
-                        g.setColor(classColor);
+                        g.setColor(sch.getColor());
                         String curr = days.substring(i, i+1);
                         //handle Thursday separately because it is 2 characters long
                         if (curr.equals("T") && i < days.length()-1 && days.charAt(i+1) == 'h') {
@@ -143,8 +142,10 @@ public class Grid {
                         int rectHeight = (timeDiff)/30*(size) + (int)((double)(timeDiff)%30.0/30.0*size);
                         
                         //draw in rectangle for each class
-                        g.fillRect(daysToXCoord.get(curr), 
-                            timeToYCoord.get(start), xSize, rectHeight);
+                        //+1 and -2 are to create a margin around the rectangle to 
+                            //be able to display the grid lines around it
+                        g.fillRect(daysToXCoord.get(curr)+1, 
+                            timeToYCoord.get(start)+1, xSize-2, rectHeight-2);
 
                         //set color to black to write the text for each class
                         g.setColor(Color.black);
@@ -160,14 +161,21 @@ public class Grid {
         }
     }
 
-    private Color getRandomColor() {
-        Random rand = new Random();
-        float r = rand.nextFloat() / 2f + 0.5f;
-        float g = rand.nextFloat() / 2f + 0.5f;
-        float b = rand.nextFloat() / 2f + 0.5f;
-        // int r = rand.nextInt(255);
-        // int g = rand.nextInt(255);
-        // int b = rand.nextInt(255);
-        return new Color(r, g, b);
+
+    protected boolean addSchedule(Schedule curr) {
+        //no duplicate schedules allowed
+        if (!allSchedules.contains(curr)) {
+            allSchedules.add(curr);
+            return true;
+        }
+        return false;
+    }
+
+    protected boolean removeSchedule(Schedule curr) {
+        if (allSchedules.contains(curr)) {
+            allSchedules.remove(curr);
+            return true;
+        }
+        return false;
     }
 }

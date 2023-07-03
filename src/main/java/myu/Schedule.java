@@ -2,6 +2,7 @@ package myu;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 import java.awt.Color;
 public class Schedule {
@@ -17,7 +18,7 @@ public class Schedule {
     public Schedule(String name, List<String> classes) {
         studentName = name;
         courses = new ArrayList<>();
-        color = Color.black;
+        color = getRandomColor();
         buildSchedule(classes);
     }
 
@@ -26,7 +27,6 @@ public class Schedule {
             int index = 0;
             //delete SLN 
             curr = curr.substring(curr.indexOf(" ") + 1);
-            // System.out.println(curr);
 
             Scanner front = new Scanner(curr);
             String className = "";
@@ -41,7 +41,6 @@ public class Schedule {
                     break;
                 }
             }
-            // System.out.println(className);
             //+1 to account for the space after the class name
             index += className.length() + 1; 
 
@@ -50,7 +49,6 @@ public class Schedule {
             //delete class credits details
             index += front.next().length() + 1;
             curr = curr.substring(index);
-            // System.out.println(curr);
             front.close();
 
             //start working from back
@@ -63,21 +61,30 @@ public class Schedule {
                 //skip over instructor name if is present
                 if (hasNum(temp)) {
                     location = back.next() + " " + temp;
-                    // System.out.println(location);
                     break;
                 }
             }
             String classTime = back.next();
             String days = back.next();
-            // System.out.println(classTime);
-            // System.out.println(days);
             back.close();
+            
             int i = classTime.indexOf("-");
             courses.add(new Course(className, days, 
                             classTime.substring(0, i), 
                             classTime.substring(i+1), location));
-            System.out.println(courses.get(courses.size()-1));
+            // System.out.println(courses.get(courses.size()-1));
         }
+    }
+
+    private Color getRandomColor() {
+        Random rand = new Random();
+        float r = rand.nextFloat() / 2f + 0.5f;
+        float g = rand.nextFloat() / 2f + 0.5f;
+        float b = rand.nextFloat() / 2f + 0.5f;
+        // int r = rand.nextInt(255);
+        // int g = rand.nextInt(255);
+        // int b = rand.nextInt(255);
+        return new Color(r, g, b);
     }
 
     //check if string is a valid integer
