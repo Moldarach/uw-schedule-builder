@@ -10,10 +10,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 
-public class HelloWorldSwing extends JPanel implements ActionListener {
+public class SwingLauncher extends JPanel implements ActionListener {
     private Grid visualGrid;
 
-    public HelloWorldSwing() {
+    public SwingLauncher() {
         super(new GridLayout(1, 1));
          
         JTabbedPane tabbedPane = new JTabbedPane();
@@ -104,7 +104,7 @@ public class HelloWorldSwing extends JPanel implements ActionListener {
         // JTextArea ta = new JTextArea();
 
         //Adding Components to the frame.
-        frame.add(new HelloWorldSwing(), BorderLayout.CENTER);
+        frame.add(new SwingLauncher(), BorderLayout.CENTER);
         // frame.getContentPane().add(BorderLayout.SOUTH, panel1);
         // frame.getContentPane().add(BorderLayout.PAGE_START, panel2);
         frame.getContentPane().add(BorderLayout.NORTH, mb);
@@ -148,10 +148,10 @@ public class HelloWorldSwing extends JPanel implements ActionListener {
                         temp.add(testSch);
                         visualGrid = new Grid(temp);
                     } else {
-                        visualGrid.addSchedule(testSch);
+                        if (!visualGrid.addSchedule(testSch)) {
+                            throw new IllegalStateException("Inputted student name already exists");
+                        }
                     }
-                    
-
                 } catch(Exception e) {
                     e.printStackTrace();
                 } 

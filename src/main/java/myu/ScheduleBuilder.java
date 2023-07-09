@@ -70,6 +70,7 @@ public class ScheduleBuilder {
             }
         }
         input.close();
+        pd.close();
         return allCourses;
     }
 

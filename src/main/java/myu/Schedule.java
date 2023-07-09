@@ -78,12 +78,12 @@ public class Schedule {
 
     private Color getRandomColor() {
         Random rand = new Random();
-        float r = rand.nextFloat() / 2f + 0.5f;
-        float g = rand.nextFloat() / 2f + 0.5f;
-        float b = rand.nextFloat() / 2f + 0.5f;
-        // int r = rand.nextInt(255);
-        // int g = rand.nextInt(255);
-        // int b = rand.nextInt(255);
+        // float r = rand.nextFloat() / 2f + 0.5f;
+        // float g = rand.nextFloat() / 2f + 0.5f;
+        // float b = rand.nextFloat() / 2f + 0.5f;
+        int r = rand.nextInt(155)+50;
+        int g = rand.nextInt(155)+50;
+        int b = rand.nextInt(155)+50;
         return new Color(r, g, b);
     }
 
