@@ -1,4 +1,10 @@
 package myu;
+
+/*
+ * This class represents a university course (at UW Seattle) with only
+ *  the necessary fields to help create a visual schedule like the one
+ *  registration provides us
+ */
 public class Course {
     private String name;
     private String days;
@@ -6,6 +12,9 @@ public class Course {
     private String endTime;
     private String location;
 
+    /*
+     * Constructor 
+     */
     public Course(String name, String days, String startTime,
                     String endTime, String location) {
         
@@ -15,6 +24,14 @@ public class Course {
         this.endTime = endTime;
         this.location = location;
     }
+
+    /*
+     * @purpose: creates a String of the properties of 
+     *              current Course obj with each property
+     *              on a new line
+     * @param: none
+     * @returns: see @purpose
+     */
     public String toString() {
         String temp = "Class name: " + name + "\n";
         temp += "Location: " + location + "\n";
@@ -22,6 +39,10 @@ public class Course {
         temp += "Time: " + startTime + "-" + endTime + "\n";
         return temp;
     }
+
+    /*
+     * following are all get methods 
+     */
     public String getName() {
         return name;
     }

@@ -1,90 +1,40 @@
 package myu;
 
+// import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
+import java.awt.image.BufferedImage;
+import java.awt.GridBagLayout;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
+/*
+ * This class is the main launcher for the UW Schedule Builder application
+ * Its UI handles adding a schedule and nothing else right now
+ */
 public class SwingLauncher extends JPanel implements ActionListener {
     private Grid visualGrid;
 
-    public SwingLauncher() {
-        super(new GridLayout(1, 1));
-         
-        JTabbedPane tabbedPane = new JTabbedPane();
-        
-        //Creating the panel at bottom and adding components
-        JPanel panel1 = new JPanel(); // the panel is not visible in output
-        JButton addSchedule = new JButton("Add a schedule");
-        // JButton showSchedule = new JButton("Show all schedules");
-
-        JButton hideSchedule = new JButton("Hide all schedules");
-        
-        addSchedule.addActionListener(e -> addPDF());
-        // showSchedule.addActionListener(e -> scheduleDisplayChanged());
-
-        // panel1.add(addSchedule);
-        panel1.add(BorderLayout.SOUTH, addSchedule);
-        // panel1.add(BorderLayout.EAST, showSchedule);
-        //frame.getContentPane().add(BorderLayout.SOUTH, panel1);
-
-        // JComponent panel2 = makeTextPanel("Panel #2");
-        JPanel panel2 = new JPanel();
-        panel2.add(hideSchedule);
-
-
-        JPanel cards = new JPanel(new GridLayout(1, 2));
-        cards.add(panel1, null);
-        cards.add(panel2, null);
-
-        // JComponent panel1 = makeTextPanel("Panel #1");
-        tabbedPane.addTab("Add Schedules", null, cards,
-                "Add Schedules");
-         
-        // JComponent panel2 = makeTextPanel("Panel #2");
-        tabbedPane.addTab("Show Schedules", null, panel2,
-                "Show Schedules");
-         
-        JComponent panel3 = makeTextPanel("Panel #3");
-        tabbedPane.addTab("Tab 3", null, panel3,
-                "Still does nothing");
-         
-         
-        //Add the tabbed pane to this panel.
-        add(tabbedPane);
-         
-        //The following line enables to use scrolling tabs.
-        tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-    }
-     
-    protected JComponent makeTextPanel(String text) {
-        JPanel panel = new JPanel(false);
-        JLabel filler = new JLabel(text);
-        filler.setHorizontalAlignment(JLabel.CENTER);
-        panel.setLayout(new GridLayout(1, 1));
-        panel.add(filler);
-        return panel;
-    }
-
-    /**
-     * Create the GUI and show it.  For thread safety,
-     * this method should be invoked from the
-     * event-dispatching thread.
+    /*
+     * constructor
+     * builds the window that allows you to add a schedule
+     * some features CURRENTLY DO NOT WORK such as removing 
+     *      schedules or saving the entire visual schedule
+     * @param: JFrame to add components to
+     * @return: new SwingLauncher obj
      */
-    private static void createAndShowGUI() {
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        double width = screenSize.getWidth();
-        double height = screenSize.getHeight();
+    public SwingLauncher(JFrame frame) {
+        super(new GridLayout(1, 1));
 
-        //Creating the Frame
-        JFrame frame = new JFrame("Schedule Builder");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 400);
+        Container pane = frame.getContentPane();
+        pane.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
 
         //Creating the MenuBar and adding components
         JMenuBar mb = new JMenuBar();
@@ -94,43 +44,128 @@ public class SwingLauncher extends JPanel implements ActionListener {
         mb.add(m2);
         JMenuItem m11 = new JMenuItem("Open");
         JMenuItem m22 = new JMenuItem("Save as");
+
+        m22.addActionListener(e -> saveAs());
         m1.add(m11);
         m1.add(m22);
 
+        //adding menu bar to pane
+        frame.setJMenuBar(mb);
         
+        //creating the buttons
+        JButton addSchedule = new JButton("Add a schedule");
+        // JButton hideSchedule = new JButton("Hide all schedules");
         
+        addSchedule.addActionListener(e -> addPDF());
 
-        // Text Area at the Center
-        // JTextArea ta = new JTextArea();
+        JPanel panel2 = new JPanel();
+        // panel2.add(hideSchedule);
+
+        //adding addSchedule button to pane
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.ipady = 40;
+        frame.add(addSchedule, constraints);
+        
+        constraints.gridx = 1;
+        constraints.gridy = 0;
+        constraints.weighty = 1;
+        constraints.fill = GridBagConstraints.VERTICAL;
+        frame.add(panel2, constraints);
+    }
+
+    /**
+     * Create the GUI and show it.  For thread safety,
+     * this method should be invoked from the
+     * event-dispatching thread.
+     */
+    private static void createAndShowGUI() {
+        //Creating the Frame
+        JFrame frame = new JFrame("Schedule Builder");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 400);
 
         //Adding Components to the frame.
-        frame.add(new SwingLauncher(), BorderLayout.CENTER);
-        // frame.getContentPane().add(BorderLayout.SOUTH, panel1);
-        // frame.getContentPane().add(BorderLayout.PAGE_START, panel2);
-        frame.getContentPane().add(BorderLayout.NORTH, mb);
+        new SwingLauncher(frame);
+        // frame.add(new SwingLauncher(), BorderLayout.CENTER);
+        // frame.getContentPane().add(BorderLayout.NORTH, mb);
         frame.setVisible(true);
     }
 
+    /*
+     * saves the content of the Grid class JFrame to a png file location
+     *      chosen by the user
+     * CURRENTLY DOES NOT WORK: outputs an empty file
+     * @param: none
+     * @return: nothing
+     */
+    private void saveAs() {
+        try {
+            Container contentPane = visualGrid.getFrame().getContentPane();
+            BufferedImage image = new BufferedImage(contentPane.getWidth(), contentPane.getHeight(),
+                    BufferedImage.TYPE_INT_RGB);
+            Graphics2D g2d = image.createGraphics();
+            contentPane.printAll(g2d);
+            g2d.dispose();
+
+            //choose location to save
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int returnValue = fileChooser.showSaveDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                String path = file.getAbsolutePath();
+                String name = JOptionPane.showInputDialog(fileChooser,
+                        "Choose a name for the saved file", null);
+                path += ("\\" + name + ".jpeg");
+                try {
+                    File newFile = new File(path);
+                    if (newFile.createNewFile()) {
+                        // ImageIO.write(image, name, newFile);
+                    } else {
+                        throw new IOException("file not created");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                // write image
+                // ImageIO.write(image, "jpeg", file); //code overwrites selected folder
+                //also may be broken because using incorrect empty file stream to write
+            } else {
+                System.out.println("User cancelled saving");
+            }
+            
+        } catch (Exception e) {
+            System.out.println(e.getStackTrace());
+        }
+    }
+
+    /*
+     * prompts user to choose a pdf file and parses its content
+     * assumes that user provides a pdf in the correct format 
+     *  i.e. save as pdf of correct webpage; instructions in README
+     * @param: none
+     * @return: nothing
+     */
     private void addPDF() {
-        
         JFileChooser fileChooser = new JFileChooser();
 
-        // Set the file chooser to open in file selection mode
+        //set the file chooser to open in file selection mode
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
-        // Set an optional file filter
+        //set an file filter
         FileNameExtensionFilter filter = new FileNameExtensionFilter("PDF Files", "pdf");
         fileChooser.setFileFilter(filter);
 
-        // Show the file chooser dialog
+        //show the file chooser dialog
         int returnValue = fileChooser.showOpenDialog(null);
 
-        // Check if the user selected a file
+        //check if the user selected a file
         if (returnValue == JFileChooser.APPROVE_OPTION) {
-            // Get the selected file
-            java.io.File selectedFile = fileChooser.getSelectedFile();
+            //get the selected file
+            File selectedFile = fileChooser.getSelectedFile();
 
-            // Process the selected file
+            //process the selected file
             System.out.println("Selected File: " + selectedFile.getAbsolutePath());
             
             String name = JOptionPane.showInputDialog(fileChooser,
@@ -166,7 +201,7 @@ public class SwingLauncher extends JPanel implements ActionListener {
     }
 
     public static void main(String[] args) {
-        //Schedule a job for the event-dispatching thread:
+        //schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

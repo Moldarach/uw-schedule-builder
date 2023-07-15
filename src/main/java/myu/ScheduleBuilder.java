@@ -8,19 +8,18 @@ import java.util.Scanner;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
-
+/*
+ * This class parses the PDF documents that contain a UW academic schedule 
+ * (summer quarter is tenatively unsupported) and outputs the information 
+ * necessary for creating the visual schedule (class name, times, days, etc)
+ * to a string for the Schedule class to handle
+ */
 public class ScheduleBuilder {
-    public static void main(String args[]) throws IOException {
-        
-    }
-    public ScheduleBuilder(File file) {
-        try {
-            parse(file);
-        } catch(Exception e) {
-            System.out.println("Schedule build failure");
-        }
-    }
-
+    /*
+     * @param: PDF file to read a schedule off of
+     * @return: List of string format of each Course from parameter
+     * @exception: IO Exception if issue with reading parameter file
+     */
     protected static List<String> parse(File file) throws IOException {
         /*String currentDirectory = System.getProperty("user.dir");
         File currentDir = new File(currentDirectory);
@@ -39,7 +38,6 @@ public class ScheduleBuilder {
         text = text.replace("Start here", "break");
         List<String> allCourses = new ArrayList<>();
         Scanner input = new Scanner(text);
-
         
         while (input.hasNextLine()) 
         {
@@ -48,6 +46,7 @@ public class ScheduleBuilder {
                 double totalCredits = Double.parseDouble(current.substring
                                             ("Total credits: ".length()).trim());
                 System.out.println("total credits: " + totalCredits);
+                allCourses.add(String.valueOf(totalCredits));
                 break;
             } else if (current.equals("break")) {
                 //just skip
@@ -65,8 +64,6 @@ public class ScheduleBuilder {
                             line.substring(i+2);
                 }
                 allCourses.add(line);
-                // System.out.println(line);
-                // System.out.println(reverse(line) + "\n");
             }
         }
         input.close();
@@ -74,6 +71,11 @@ public class ScheduleBuilder {
         return allCourses;
     }
 
+    /*
+     * @param: a String of words (whitespace delimiter), 
+     *          is String representation of a course
+     * @return: a String of the parameter with word order reversed 
+     */
     protected static String reverse(String str) {
         String reverse = "";
         while (str.indexOf(" ") != -1) {
@@ -84,12 +86,16 @@ public class ScheduleBuilder {
         return reverse.trim();
     }
 
-    //check if have a dash problem in the class times
-    //return true if have something like 130- 220 
+    /*
+     * check if have a dash problem in the class times
+     *      return true if have something like 130- 220  
+     * @param: a String of classtimes with a dash delimiter
+     * @return: true if there is a space following the dash 
+     *              in the parameter, false otherwise
+     */
     private static boolean checkDash(String str) {
         int i = str.lastIndexOf("-"); 
         return (i != -1 && str.substring(i-1, i).matches("\\d+")
                 && str.substring(i+1, i+2).equals(" "));
     }
-
 }

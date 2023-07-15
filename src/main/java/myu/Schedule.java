@@ -1,20 +1,24 @@
 package myu;
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.awt.Color;
+
 public class Schedule {
     private String studentName;
     private List<Course> courses;
     private Color color;
+    private int credits;
 
-    public static void main(String[] args) {
-        new Schedule("test", 
-            Arrays.asList("17913 M E 123 AB LB 0.0 VISUALIZATION & CAD TTh  930-1020 MEB 231 Jones,J"));
-    }
-
+    /*
+     * constructor
+     * relies on buildSchedule method to do most of Schedule construction
+     * @param: 
+     *      -String of the student's name whom this Schedule belongs
+     *      -List of String representations of each Course in the Schedule
+     * @return: new Schedule object
+     */
     public Schedule(String name, List<String> classes) {
         studentName = name;
         courses = new ArrayList<>();
@@ -22,7 +26,13 @@ public class Schedule {
         buildSchedule(classes);
     }
 
+    /*
+     * creates the entire list of Courses that Schedule depends on
+     * @param: String representation of all Courses in the Schedule
+     * @return: nothing
+     */
     private void buildSchedule(List<String> classes) {
+        credits = (int)Double.parseDouble(classes.remove(classes.size()-1));
         for (String curr : classes) {
             int index = 0;
             //delete SLN 
@@ -72,15 +82,13 @@ public class Schedule {
             courses.add(new Course(className, days, 
                             classTime.substring(0, i), 
                             classTime.substring(i+1), location));
-            // System.out.println(courses.get(courses.size()-1));
         }
     }
 
+    //create a random color with rgb bounds between 50-205
+    //for getting darker colors 
     private Color getRandomColor() {
         Random rand = new Random();
-        // float r = rand.nextFloat() / 2f + 0.5f;
-        // float g = rand.nextFloat() / 2f + 0.5f;
-        // float b = rand.nextFloat() / 2f + 0.5f;
         int r = rand.nextInt(155)+50;
         int g = rand.nextInt(155)+50;
         int b = rand.nextInt(155)+50;
@@ -91,11 +99,18 @@ public class Schedule {
     private boolean isNum(String str) {
         return str.matches("\\d+");
     }
+
     //check if string contains a valid integer somewhere
     private boolean hasNum(String str) {
         return str.matches(".*\\d.*");
     }
 
+    //set method
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    //following are all get methods
     public List<Course> getCourses() {
         return courses;
     }
@@ -104,11 +119,11 @@ public class Schedule {
         return studentName;
     }
     
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
     public Color getColor() {
         return color;
+    }
+
+    public int getCredits() {
+        return credits;
     }
 }
