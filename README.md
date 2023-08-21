@@ -2,7 +2,9 @@
 last updated: 7/15/23
 
 ## Overview
-This program is similar to the visual schedule builder that UW provides for each student, with the added functionality of supporting at least 3 separate schedules (and possibly more, I haven't tested beyond 3 yet). This program was built with the intention of allowing friends to directly compare their schedules and see when people would be available/unavailable. 
+This program is similar to the visual schedule builder that UW provides for each student, with the added functionality of supporting multiple separate schedules on the same screen. This program was built with the intention of allowing friends to directly compare their schedules and see when people would be available/unavailable. 
+
+This project uses Apache PDFBox to extract the data off a schedule.
 
 ## Getting the correct pdf format
 The program expects its passed pdfs to be in a certain format, which can be conveniently sourced on your registration page. The steps are as follows: 
