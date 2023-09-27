@@ -49,7 +49,7 @@ public class ScheduleBuilder {
                 allCourses.add(String.valueOf(totalCredits));
                 break;
             } else if (current.equals("break") || current.length() == 0) {
-                //just skip
+                //just skip 
             } else {
                 String line = current;
                 //some classes have a line break in their name
