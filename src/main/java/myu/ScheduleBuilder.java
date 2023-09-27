@@ -48,7 +48,7 @@ public class ScheduleBuilder {
                 System.out.println("total credits: " + totalCredits);
                 allCourses.add(String.valueOf(totalCredits));
                 break;
-            } else if (current.equals("break")) {
+            } else if (current.equals("break") || current.length() == 0) {
                 //just skip
             } else {
                 String line = current;
